@@ -102,6 +102,7 @@ TCViewerT<M>::open_mesh(const char* _filename, IO::Options _opt)
 
     setSceneCenter(tempQGL);
     setSceneRadius((bbMin-bbMax).norm()*0.5);
+    camera()->showEntireScene();
     //set_scene_pos( (bbMin+bbMax)*0.5, (bbMin-bbMax).norm()*0.5 );
 
     // for normal display
