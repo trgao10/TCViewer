@@ -5,10 +5,10 @@
 #include <string>
 #include <OpenMesh/Core/IO/MeshIO.hh>
 #include <OpenMesh/Core/IO/Options.hh>
-#include <OpenMesh/Core/Utils/GenProg.hh>
-#include <OpenMesh/Core/Utils/color_cast.hh>
+// #include <OpenMesh/Core/Utils/GenProg.hh>
+// #include <OpenMesh/Core/Utils/color_cast.hh>
 #include <OpenMesh/Core/Mesh/Attributes.hh>
-#include <OpenMesh/Tools/Utils/StripifierT.hh>
+// #include <OpenMesh/Tools/Utils/StripifierT.hh>
 #include <OpenMesh/Tools/Utils/Timer.hh>
 
 #include <QGLViewer/qglviewer.h>
@@ -22,16 +22,13 @@ class TCViewerT : public QGLViewer
 {
 public:
     typedef T                             Mesh;
-    typedef OpenMesh::StripifierT<Mesh>   MyStripifier;
 
 public:
     /// default constructor
     TCViewerT(QWidget* _parent=0)
         : QGLViewer(_parent),
-          f_strips_(false), 
           tex_id_(0),
           tex_mode_(GL_MODULATE),
-          strips_(mesh_),
           use_color_(true),
           show_vnormals_(false),
           show_fnormals_(false)
@@ -61,24 +58,12 @@ protected :
     virtual void init();
     virtual QString helpString() const;
 
-protected: // Strip support
-    void compute_strips(void)
-    {
-        if (f_strips_)
-        {
-            strips_.clear();
-            strips_.stripify();
-        }
-    }    
-
-protected:   
-    bool                   f_strips_; // enable/disable strip usage
+protected:
     GLuint                 tex_id_;
     GLint                  tex_mode_;
     OpenMesh::IO::Options  opt_; // mesh file contained texcoords?
   
     Mesh                   mesh_;
-    MyStripifier           strips_;
     bool                   use_color_;
     bool                   show_vnormals_;
     bool                   show_fnormals_;

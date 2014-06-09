@@ -1,5 +1,5 @@
 TEMPLATE = app
-TARGET   = learnOpenGLViewer
+TARGET   = TCViewer
 
 HEADERS  = TCViewerT.h TCViewer.h
 SOURCES  = main.cpp \

@@ -133,17 +133,6 @@ TCViewerT<M>::open_mesh(const char* _filename, IO::Options _opt)
       std::clog << "Computed base point for displaying face normals [" 
                 << t.as_string() << "]" << std::endl;
     }
-
-    //      
-    {
-      std::clog << "Computing strips.." << std::flush;
-      OpenMesh::Utils::Timer t;
-      t.start();
-      compute_strips();
-      t.stop();
-      std::clog << "done [" << strips_.n_strips() 
-		<< " strips created in " << t.as_string() << "]\n";
-    }
     
     //    
 #if defined(WIN32)
@@ -403,33 +392,4 @@ QString TCViewerT<T>::helpString() const
 {
     return 0;
 }
-
-//-----------------------------------------------------------------------------
-
-template <typename M>
-void 
-TCViewerT<M>::enable_strips() 
-{ 
-  if (!f_strips_)
-  {
-    f_strips_ = true;  
-    // add_draw_mode("Strips'n VertexArrays");
-    // add_draw_mode("Show Strips");
-  }
-}
-
-//-----------------------------------------------------------------------------
-
-template <typename M>
-void 
-TCViewerT<M>::disable_strips() 
-{ 
-  if (f_strips_)
-  {
-    f_strips_ = false; 
-    // del_draw_mode("Show Strips");
-    // del_draw_mode("Strip'n VertexArrays");
-  }
-}
-
 
