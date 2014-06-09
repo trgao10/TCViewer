@@ -44,9 +44,6 @@ public:
     virtual bool open_texture( const char *_filename );
     bool set_texture( QImage& _texsrc );
  
-    void enable_strips();
-    void disable_strips();  
-
     Mesh& mesh() { return mesh_; }
     const Mesh& mesh() const { return mesh_; }
         

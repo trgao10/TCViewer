@@ -73,25 +73,24 @@ TCViewerT<M>::open_mesh(const char* _filename, IO::Options _opt)
     if ( _opt.check( IO::Options::VertexTexCoord ) )
       std::cout << "File provides texture coordinates\n";
 
-
     // bounding box
     typename Mesh::ConstVertexIter vIt(mesh_.vertices_begin());
-    typename Mesh::ConstVertexIter vEnd(mesh_.vertices_end());      
-    
+    typename Mesh::ConstVertexIter vEnd(mesh_.vertices_end());
+
     typedef typename Mesh::Point Point;
     using OpenMesh::Vec3f;
-    
+
     Vec3f bbMin, bbMax;
-    
+
     bbMin = bbMax = OpenMesh::vector_cast<Vec3f>(mesh_.point(*vIt));
-    
+
     for (size_t count=0; vIt!=vEnd; ++vIt, ++count)
     {
       bbMin.minimize( OpenMesh::vector_cast<Vec3f>(mesh_.point(*vIt)));
       bbMax.maximize( OpenMesh::vector_cast<Vec3f>(mesh_.point(*vIt)));
     }
-    
-    
+
+
     // set center and radius
     Vec3f tempOM = (bbMin+bbMax)*0.5;
     Vec tempQGL(tempOM.values_[0],tempOM.values_[1],tempOM.values_[2]);
@@ -99,21 +98,20 @@ TCViewerT<M>::open_mesh(const char* _filename, IO::Options _opt)
     cout <<"+++++++++++++++++++++++++++"<<endl;
     cout << "tempOM = " << tempOM <<endl;
     cout << "tempQGL = " << tempQGL <<endl;
-    cout << (bbMin-bbMax).norm()*0.5 <<endl;
     cout<<"+++++++++++++++++++++++++++"<<endl;
 
     setSceneCenter(tempQGL);
     setSceneRadius((bbMin-bbMax).norm()*0.5);
     //set_scene_pos( (bbMin+bbMax)*0.5, (bbMin-bbMax).norm()*0.5 );
-    
+
     // for normal display
     normal_scale_ = (bbMax-bbMin).min()*0.05f;
-    
+
     // info
     std::clog << mesh_.n_vertices() << " vertices, "
-	      << mesh_.n_edges()    << " edge, "
-	      << mesh_.n_faces()    << " faces\n";
-    
+          << mesh_.n_edges()    << " edge, "
+          << mesh_.n_faces()    << " faces\n";
+
     // base point for displaying face normals
     {
       OpenMesh::Utils::Timer t;
@@ -130,14 +128,9 @@ TCViewerT<M>::open_mesh(const char* _filename, IO::Options _opt)
         mesh_.property( fp_normal_base_, *f_it ) = v;
       }
       t.stop();
-      std::clog << "Computed base point for displaying face normals [" 
+      std::clog << "Computed base point for displaying face normals ["
                 << t.as_string() << "]" << std::endl;
     }
-    
-    //    
-#if defined(WIN32)
-    updateGL();
-#endif
 
     setWindowTitle(QFileInfo(_filename).fileName());
 
@@ -225,9 +218,9 @@ bool TCViewerT<M>::set_texture( QImage& _texsrc )
 }
 
 //----------------------------------------------------------------------------
-template <typename T>
+template <typename M>
 void 
-TCViewerT<T>::setDefaultMaterial()
+TCViewerT<M>::setDefaultMaterial()
 {
     GLfloat mat_a[] = {0.1, 0.1, 0.1, 1.0};
     GLfloat mat_d[] = {0.7, 0.7, 0.5, 1.0};
@@ -242,9 +235,9 @@ TCViewerT<T>::setDefaultMaterial()
 
 
 //----------------------------------------------------------------------------
-template <typename T>
+template <typename M>
 void
-TCViewerT<T>::setDefaultLight()
+TCViewerT<M>::setDefaultLight()
 {
   GLfloat pos1[] = { 0.1,  0.1, -0.02, 0.0};
   GLfloat pos2[] = {-0.1,  0.1, -0.02, 0.0};
@@ -270,22 +263,21 @@ TCViewerT<T>::setDefaultLight()
 }
 
 //-----------------------------------------------------------------------------
-template <typename T>
-void TCViewerT<T>::init()
+template <typename M>
+void TCViewerT<M>::init()
 {
     setDefaultMaterial();
     setDefaultLight();
-    
-    setSceneCenter(Vec(0.0, 0.0, 0.0));
-    setSceneRadius(30);
-    
+        
     // help();
-    restoreStateFromFile();
+    // restoreStateFromFile();
 }
 
-template <typename T>
-void TCViewerT<T>::draw()
+template <typename M>
+void TCViewerT<M>::draw()
 {
+
+    // rendering
     typename Mesh::ConstFaceIter    fIt(mesh_.faces_begin()), fEnd(mesh_.faces_end());
 
     typename Mesh::ConstFaceVertexIter fvIt;
@@ -387,8 +379,8 @@ void TCViewerT<T>::draw()
     // glPopMatrix();
 }
 
-template <typename T>
-QString TCViewerT<T>::helpString() const
+template <typename M>
+QString TCViewerT<M>::helpString() const
 {
     return 0;
 }

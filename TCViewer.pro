@@ -3,7 +3,8 @@ TARGET   = TCViewer
 
 HEADERS  = TCViewerT.h TCViewer.h
 SOURCES  = main.cpp \
-    TCViewerT.cpp
+    TCViewerT.cpp \
+    TCViewer.cpp
 
 QT *= xml opengl widgets gui
 
