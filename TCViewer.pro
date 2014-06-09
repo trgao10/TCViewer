@@ -2,7 +2,8 @@ TEMPLATE = app
 TARGET   = learnOpenGLViewer
 
 HEADERS  = TCViewerT.h TCViewer.h
-SOURCES  = main.cpp
+SOURCES  = main.cpp \
+    TCViewerT.cpp
 
 QT *= xml opengl widgets gui
 

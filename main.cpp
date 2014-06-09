@@ -24,22 +24,8 @@ int main(int argc, char** argv)
         QMessageBox::critical( 0, QString("OpenGL"), msg + QString(argv[1]) );
         return -1;
     }
-    
-    int c;
-    OpenMesh::IO::Options opt;
 
-    while ( (c=getopt(argc,argv,"hbs"))!=-1 )
-    {
-        switch(c)
-        {
-        case 'b': opt += OpenMesh::IO::Options::Binary; break;
-        case 'h':
-            usage_and_exit(0);
-        case 's': opt += OpenMesh::IO::Options::Swap; break;
-        default:
-            usage_and_exit(1);
-        }
-    }
+    OpenMesh::IO::Options opt;
 
     // enable most options for now
     opt += OpenMesh::IO::Options::VertexColor;
@@ -95,14 +81,3 @@ void create_menu(QMainWindow &w)
     fileMenu->addAction(texAct);
 }
 
-void usage_and_exit(int xcode)
-{
-   std::cout << "Usage: meshviewer [-s] [mesh] [texture]\n" << std::endl;
-   std::cout << "Options:\n"
-	     << "  -b\n"
-	     << "    Assume input to be binary.\n\n"
-             << "  -s\n"
-             << "    Reverse byte order, when reading binary files.\n"
-             << std::endl;
-   exit(xcode);
-}

@@ -2,10 +2,6 @@
 #define TCVIEWERT_H
 
 //== INCLUDES =================================================================
-//#include <OpenMesh/Core/Geometry/VectorT.hh>
-//#include <QtOpenGL/qgl.h>
-//#include <vector>
-//#include <map>
 #include <string>
 #include <OpenMesh/Core/IO/MeshIO.hh>
 #include <OpenMesh/Core/IO/Options.hh>
@@ -56,89 +52,7 @@ public:
 
     Mesh& mesh() { return mesh_; }
     const Mesh& mesh() const { return mesh_; }
-    
-    /* QAction* findAction(const char *name) */
-    /* { */
-    /*     QString namestr = QString(name); */
-    /*     ActionMap::iterator e = names_to_actions.end(); */
         
-    /*     ActionMap::iterator found = names_to_actions.find(namestr); */
-    /*     if (found != e) { */
-    /*         return found->second; */
-    /*     } */
-    /*     return 0; */
-    /* } */
-
-    /* void addAction(QAction* act, const char* name) */
-    /* { */
-    /*     names_to_actions[name] = act; */
-    /*     QGLWidget::addAction(act); */
-    /* } */
-    
-    /* void removeAction(const char* name) */
-    /* { */
-    /*     QString namestr = QString(name); */
-    /*     ActionMap::iterator e = names_to_actions.end(); */
-        
-    /*     ActionMap::iterator found = names_to_actions.find(namestr); */
-    /*     if (found != e) { */
-    /*         removeAction(found->second); */
-    /*     } */
-    /* } */
-    
-    /* void removeAction(QAction* act) */
-    /* { */
-    /*     ActionMap::iterator it = names_to_actions.begin(), e = names_to_actions.end(); */
-    /*     ActionMap::iterator found = e; */
-    /*     for(; it!=e; ++it) { */
-    /*         if (it->second == act) { */
-    /*             found = it; */
-    /*             break; */
-    /*         } */
-    /*     } */
-    /*     if (found != e) { */
-    /*         names_to_actions.erase(found); */
-    /*     } */
-    /*     popup_menu_->removeAction(act); */
-    /*     draw_modes_group_->removeAction(act); */
-    /*     QGLWidget::removeAction(act); */
-    /* } */
-
-    
-    /* /// add draw mode to popup menu, and return the QAction created */
-    /* QAction *add_draw_mode(const std::string& _s){ */
-    /*     ++n_draw_modes_; */
-    /*     draw_mode_names_.push_back(_s); */
-        
-    /*     QActionGroup *grp = draw_modes_group_; */
-    /*     QAction* act = new QAction(tr(_s.c_str()), this); */
-    /*     act->setCheckable(true); */
-    /*     act->setData(n_draw_modes_); */
-        
-    /*     grp->addAction(act); */
-    /*     popup_menu_->addAction(act); */
-    /*     addAction(act, _s.c_str()); */
-        
-    /*     return act; */
-    /* } */
-
-    /* /// delete draw mode from popup menu */
-    /* void del_draw_mode(const std::string& _s) */
-    /* { */
-    /*     QString cmp = _s.c_str(); */
-    /*     QList<QAction*> actions_ = popup_menu_->actions(); */
-    /*     QList<QAction*>::iterator it=actions_.begin(), e=actions_.end(); */
-    /*     for(; it!=e; ++it) { */
-    /*         if ((*it)->text() == cmp) { break; } */
-    /*     } */
-  
-    /*     popup_menu_->removeAction(*it); */
-    /* } */
-
-    /* const std::string& current_draw_mode() const  */
-    /* { return draw_mode_ ? draw_mode_names_[draw_mode_-1] : nomode_; } */
-
-    
 protected :
     void setDefaultMaterial();
     void setDefaultLight();
@@ -171,16 +85,6 @@ protected:
     float                  normal_scale_;
     OpenMesh::FPropHandleT< typename Mesh::Point > fp_normal_base_;
 
-/* private: */
-/*     // popup menu for draw mode selection */
-/*     QMenu*               popup_menu_; */
-/*     QActionGroup*        draw_modes_group_; */
-/*     typedef std::map<QString,QAction*> ActionMap; */
-/*     ActionMap            names_to_actions; */
-/*     unsigned int              draw_mode_; */
-/*     unsigned int              n_draw_modes_; */
-/*     std::vector<std::string>  draw_mode_names_; */
-/*     static std::string        nomode_; */
 };
 
 #ifndef TCVIEWERT_CPP
