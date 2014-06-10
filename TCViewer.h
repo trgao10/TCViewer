@@ -14,21 +14,21 @@
 using namespace OpenMesh;  
 using namespace OpenMesh::Attributes;
 
-struct MyTraits : public OpenMesh::DefaultTraits
+struct TCTraits : public OpenMesh::DefaultTraits
 {
     HalfedgeAttributes(OpenMesh::Attributes::PrevHalfedge);
 };
 
-typedef OpenMesh::TriMesh_ArrayKernelT<MyTraits>  MyMesh;
+typedef OpenMesh::TriMesh_ArrayKernelT<TCTraits>  TCMesh;
 
 //== CLASS DEFINITION =========================================================
-class TCViewer : public TCViewerT<MyMesh>
+class TCViewer : public TCViewerT<TCMesh>
 {
     Q_OBJECT
 
 public:
     /// default constructor
-    TCViewer(QWidget* parent=0) : TCViewerT<MyMesh>(parent)
+    TCViewer(QWidget* parent=0) : TCViewerT<TCMesh>(parent)
     {}
     OpenMesh::IO::Options& options() { return _options; }
     const OpenMesh::IO::Options& options() const { return _options; }

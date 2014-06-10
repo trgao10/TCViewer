@@ -5,10 +5,7 @@
 #include <string>
 #include <OpenMesh/Core/IO/MeshIO.hh>
 #include <OpenMesh/Core/IO/Options.hh>
-// #include <OpenMesh/Core/Utils/GenProg.hh>
-// #include <OpenMesh/Core/Utils/color_cast.hh>
 #include <OpenMesh/Core/Mesh/Attributes.hh>
-// #include <OpenMesh/Tools/Utils/StripifierT.hh>
 #include <OpenMesh/Tools/Utils/Timer.hh>
 
 #include <QGLViewer/qglviewer.h>
@@ -39,14 +36,17 @@ public:
 
     /// open mesh
     virtual bool open_mesh(const char* _filename, OpenMesh::IO::Options _opt);
-  
+
     /// load texture
     virtual bool open_texture( const char *_filename );
     bool set_texture( QImage& _texsrc );
- 
+
     Mesh& mesh() { return mesh_; }
     const Mesh& mesh() const { return mesh_; }
-        
+
+    qglviewer::Vec OMVec3f_to_QGLVec(OpenMesh::Vec3f OMVec3f)
+    { return qglviewer::Vec(OMVec3f.values_[0], OMVec3f.values_[1], OMVec3f.values_[2]); }
+
 protected :
     void setDefaultMaterial();
     void setDefaultLight();
