@@ -74,12 +74,12 @@ TCViewerT<M>::open_mesh(const char* _filename, IO::Options _opt)
       std::cout << "File provides texture coordinates\n";
 
     // center of mass
-    Vec3f CenterOfMass;
-    for (typename Mesh::VertexIter v_it = mesh_.vertices_begin(); v_it != mesh_.vertices_end(); ++v_it)
-        CenterOfMass += mesh_.point(*v_it);
-    CenterOfMass /= mesh_.n_vertices();
-    Vec CenterOfMassVec = OMVec3f_to_QGLVec(CenterOfMass);
-    cout << "Center of Mass = " << CenterOfMassVec << endl;
+//    Vec3f CenterOfMass;
+//    for (typename Mesh::VertexIter v_it = mesh_.vertices_begin(); v_it != mesh_.vertices_end(); ++v_it)
+//        CenterOfMass += mesh_.point(*v_it);
+//    CenterOfMass /= mesh_.n_vertices();
+//     Vec CenterOfMassVec = OMVec3f_to_QGLVec(CenterOfMass);
+//    cout << "Center of Mass = " << CenterOfMassVec << endl;
 
     // bounding box
     typename Mesh::ConstVertexIter vIt(mesh_.vertices_begin());
@@ -99,11 +99,11 @@ TCViewerT<M>::open_mesh(const char* _filename, IO::Options _opt)
     }
 
     // set bounding box at the center of the scene
-    glPushMatrix();
-    glTranslatef(-CenterOfMassVec.x, -CenterOfMassVec.y, -CenterOfMassVec.z);
+    // glPushMatrix();
+    // glTranslatef(-CenterOfMassVec.x, -CenterOfMassVec.y, -CenterOfMassVec.z);
     setSceneBoundingBox(OMVec3f_to_QGLVec(bbMin), OMVec3f_to_QGLVec(bbMax));
     camera()->showEntireScene();
-    glPopMatrix();
+    // glPopMatrix();
 
     // for normal display
     normal_scale_ = (bbMax-bbMin).min()*0.05f;
@@ -265,9 +265,9 @@ TCViewerT<M>::setDefaultLight()
 template <typename M>
 void TCViewerT<M>::init()
 {
-    setDefaultMaterial();
-    setDefaultLight();
-        
+    // setDefaultMaterial();
+    // setDefaultLight();
+
     // help();
     restoreStateFromFile();
 }
@@ -275,15 +275,19 @@ void TCViewerT<M>::init()
 template <typename M>
 void TCViewerT<M>::draw()
 {
+    if ( ! mesh_.n_vertices() )
+        return;
+//    setDefaultLight();
+//    setDefaultMaterial();
 
     // rendering
     typename Mesh::ConstFaceIter fIt(mesh_.faces_begin()), fEnd(mesh_.faces_end());
-
     typename Mesh::ConstFaceVertexIter fvIt;
     
-    glEnableClientState(GL_NORMAL_ARRAY);
     glEnableClientState(GL_VERTEX_ARRAY);
     glVertexPointer(3, GL_FLOAT, 0, mesh_.points());
+
+    glEnableClientState(GL_NORMAL_ARRAY);
     glNormalPointer(GL_FLOAT, 0, mesh_.vertex_normals());
 
     if ( tex_id_ && mesh_.has_vertex_texcoords2D() )
