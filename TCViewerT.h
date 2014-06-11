@@ -28,7 +28,8 @@ public:
           tex_mode_(GL_MODULATE),
           use_color_(true),
           show_vnormals_(false),
-          show_fnormals_(false)
+          show_fnormals_(false),
+          draw_mode_("Smooth")
           {}
     
     ///destructor
@@ -40,6 +41,9 @@ public:
     /// load texture
     virtual bool open_texture( const char *_filename );
     bool set_texture( QImage& _texsrc );
+
+    /// set draw_mode_
+    void set_draw_mode(const std::string _mode);
 
     Mesh& mesh() { return mesh_; }
     const Mesh& mesh() const { return mesh_; }
@@ -66,6 +70,8 @@ protected:
     bool                   show_fnormals_;
     float                  normal_scale_;
     OpenMesh::FPropHandleT< typename Mesh::Point > fp_normal_base_;
+
+    std::string            draw_mode_;
 
 };
 

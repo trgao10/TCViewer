@@ -1,10 +1,12 @@
 TEMPLATE = app
 TARGET   = TCViewer
 
-HEADERS  = TCViewerT.h TCViewer.h
+HEADERS  = TCViewerT.h TCViewer.h \
+    mainwindow.h
 SOURCES  = main.cpp \
     TCViewerT.cpp \
-    TCViewer.cpp
+    TCViewer.cpp \
+    mainwindow.cpp
 
 QT *= xml opengl widgets gui
 

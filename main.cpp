@@ -7,9 +7,10 @@
 #include <QMenuBar>
 #include <QFileDialog>
 
+#include "mainwindow.h"
 #include "TCViewer.h"
 
-void create_menu(QMainWindow &w);
+void create_menus(MainWindow &w);
 //void usage_and_exit(int xcode);
 
 //== MAIN FUNCTION ============================================================
@@ -27,7 +28,7 @@ int main(int argc, char** argv)
 
     OpenMesh::IO::Options opt;
 
-    // enable most options for now
+    /// enable most options for now
     opt += OpenMesh::IO::Options::VertexColor;
     opt += OpenMesh::IO::Options::VertexNormal;
     opt += OpenMesh::IO::Options::VertexTexCoord;
@@ -35,44 +36,29 @@ int main(int argc, char** argv)
     opt += OpenMesh::IO::Options::FaceNormal;
     opt += OpenMesh::IO::Options::FaceTexCoord;
   
-    QMainWindow mainWin;
+    MainWindow mainWin;
     TCViewer viewer(&mainWin);
     viewer.setOptions(opt);
     mainWin.setCentralWidget(&viewer);
     viewer.setWindowTitle("TCViewer");
     
-    create_menu(mainWin);
+    create_menus(mainWin);
         
     mainWin.show();
     
-    // load scene if specified on the command line
+    /// load scene if specified on the command line
     if (optind < argc)
     {
         viewer.open_mesh_gui(argv[optind]);
     }
 
-    // Run main loop.
     return application.exec();
 }
 
-void create_menu(QMainWindow &w)
+void create_menus(MainWindow &w)
 {
-    using namespace Qt;
-    QMenu *fileMenu = w.menuBar()->addMenu(w.tr("&File"));
-
-    QAction* openAct = new QAction(w.tr("&Open mesh..."), &w);
-    openAct->setShortcut(w.tr("Ctrl+O"));
-    openAct->setStatusTip(w.tr("Open a mesh file"));
-    QObject::connect(openAct, SIGNAL(triggered()), w.centralWidget(), SLOT(query_open_mesh_file()));
-    fileMenu->addAction(openAct);
-
-    QAction* texAct = new QAction(w.tr("Open &texture..."), &w);
-    texAct->setShortcut(w.tr("Ctrl+T"));
-    texAct->setStatusTip(w.tr("Open a texture file"));
-    QObject::connect(texAct, SIGNAL(triggered()), w.centralWidget(), SLOT(query_open_texture_file()));
-    fileMenu->addAction(texAct);
-
-    QMenu *renderMenu = w.menuBar()->addMenu(w.tr("&Render Mode"));
-
+    /// deal with fileMenu
+    QObject::connect(w.openAct, SIGNAL(triggered()), w.centralWidget(), SLOT(query_open_mesh_file()));
+    QObject::connect(w.texAct, SIGNAL(triggered()), w.centralWidget(), SLOT(query_open_texture_file()));
 }
 
