@@ -12,6 +12,7 @@
 
 //== FORWARDS =================================================================
 class QImage;
+class QMenu;
 
 //== CLASS DEFINITION =========================================================
 template <typename T>
@@ -59,6 +60,8 @@ protected :
     virtual void init();
     virtual QString helpString() const;
 
+    virtual void keyPressEvent(QKeyEvent *e);
+
 protected:
     GLuint                 tex_id_;
     GLint                  tex_mode_;
@@ -72,7 +75,6 @@ protected:
     OpenMesh::FPropHandleT< typename Mesh::Point > fp_normal_base_;
 
     std::string            draw_mode_;
-
 };
 
 #ifndef TCVIEWERT_CPP

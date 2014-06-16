@@ -16,15 +16,6 @@ class MainWindow : public QMainWindow
 public:
     MainWindow();
 
-//private slots:
-//    void Smooth();
-//    void Flat();
-//    void Wireframe();
-//    void Points();
-//    void HiddenLine();
-//    void about();
-//    void aboutQt();
-
 public:
     void createActions(TCViewer *viewer);
     void createMenus();
@@ -44,6 +35,9 @@ public:
     QAction *aboutAct;
     QAction *aboutQtAct;
     QLabel *infoLabel;
+
+protected:
+    virtual void mousePressEvent (QMouseEvent * event);
 };
 
 #endif

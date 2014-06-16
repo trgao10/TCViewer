@@ -30,7 +30,8 @@ class TCViewer : public TCViewerT<TCMesh>
 public:
     /// default constructor
     TCViewer(QWidget* parent=0) : TCViewerT<TCMesh>(parent)
-    {}
+    {
+    }
     OpenMesh::IO::Options& options() { return _options; }
     const OpenMesh::IO::Options& options() const { return _options; }
     void setOptions(const OpenMesh::IO::Options& opts) { _options = opts; }

@@ -72,9 +72,7 @@ void MainWindow::createMenus()
 {
     fileMenu = menuBar()->addMenu(tr("&File"));
     fileMenu->addAction(openAct);
-//    connect(openAct, SIGNAL(triggered()), this->centralWidget(), SLOT(query_open_mesh_file()));
     fileMenu->addAction(texAct);
-//    connect(texAct, SIGNAL(triggered()), this->centralWidget(), SLOT(query_open_texture_file()));
 
     renderMenu = menuBar()->addMenu(tr("&Render"));
     renderMenu->addAction(SmoothAct);
@@ -82,10 +80,26 @@ void MainWindow::createMenus()
     renderMenu->addAction(WireframeAct);
     renderMenu->addAction(PointsAct);
     renderMenu->addAction(HiddenLineAct);
-//    renderMenu->addSeparator();
 
     helpMenu = menuBar()->addMenu(tr("&Help"));
     helpMenu->addAction(aboutAct);
     helpMenu->addAction(aboutQtAct);
+}
+
+void MainWindow::mousePressEvent(QMouseEvent *event)
+{
+    if ((event->buttons() == Qt::MidButton) && (event->modifiers() == Qt::ControlModifier))
+    {
+        QMenu menu(this);
+        menu.addAction(SmoothAct);
+        menu.addAction(FlatAct);
+        menu.addAction(WireframeAct);
+        menu.addAction(PointsAct);
+        menu.addAction(HiddenLineAct);
+        menu.exec(event->globalPos());
+    }
+    else {
+        QWidget::mousePressEvent(event);
+    }
 }
 

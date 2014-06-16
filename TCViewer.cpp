@@ -1,5 +1,11 @@
 #include "TCViewer.h"
 
+//TCViewer::TCViewer()
+//{
+//    popup_menu_->addAction(SmoothAct);
+//    connect(SmoothAct, SIGNAL(triggered()), viewer, SLOT(Smooth()));
+//}
+
 void TCViewer::Smooth()
 {
     set_draw_mode("Smooth");
@@ -28,7 +34,6 @@ void TCViewer::HiddenLine()
 {
     set_draw_mode("Hidden-Line");
     updateGL();
-    std::cout << "Hidden-Line" << std::endl;
 }
 
 void TCViewer::about()

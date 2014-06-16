@@ -4,6 +4,10 @@
 #include <iostream>
 #include <fstream>
 // --------------------
+#include <QMenu>
+#include <QMouseEvent>
+#include <QMap>
+#include <QCursor>
 #include <QImage>
 #include <QFileInfo>
 #include <QKeyEvent>
@@ -24,9 +28,9 @@ template <typename M>
 bool 
 TCViewerT<M>::open_mesh(const char* _filename, IO::Options _opt)
 {
-  // load mesh
-  // calculate normals
-  // set scene center and radius   
+  /// load mesh
+  /// calculate normals
+  /// set scene center and radius
   
   mesh_.request_face_normals();
   mesh_.request_face_colors();
@@ -52,11 +56,10 @@ TCViewerT<M>::open_mesh(const char* _filename, IO::Options _opt)
       std::cout << "File provides vertex normals\n";
 
 
-    // check for possible color information
+    /// check for possible color information
     if ( opt_.check( IO::Options::VertexColor ) )
     {
       std::cout << "File provides vertex colors\n";
-      // add_draw_mode("Colored Vertices");
     }
     else
       mesh_.release_vertex_colors();
@@ -64,8 +67,6 @@ TCViewerT<M>::open_mesh(const char* _filename, IO::Options _opt)
     if ( _opt.check( IO::Options::FaceColor ) )
     {
       std::cout << "File provides face colors\n";
-      // add_draw_mode("Solid Colored Faces");
-      // add_draw_mode("Smooth Colored Faces");
     }
     else
       mesh_.release_face_colors();
@@ -73,15 +74,7 @@ TCViewerT<M>::open_mesh(const char* _filename, IO::Options _opt)
     if ( _opt.check( IO::Options::VertexTexCoord ) )
       std::cout << "File provides texture coordinates\n";
 
-    // center of mass
-//    Vec3f CenterOfMass;
-//    for (typename Mesh::VertexIter v_it = mesh_.vertices_begin(); v_it != mesh_.vertices_end(); ++v_it)
-//        CenterOfMass += mesh_.point(*v_it);
-//    CenterOfMass /= mesh_.n_vertices();
-//     Vec CenterOfMassVec = OMVec3f_to_QGLVec(CenterOfMass);
-//    cout << "Center of Mass = " << CenterOfMassVec << endl;
-
-    // bounding box
+    /// bounding box
     typename Mesh::ConstVertexIter vIt(mesh_.vertices_begin());
     typename Mesh::ConstVertexIter vEnd(mesh_.vertices_end());
 
@@ -94,26 +87,25 @@ TCViewerT<M>::open_mesh(const char* _filename, IO::Options _opt)
 
     for (size_t count=0; vIt!=vEnd; ++vIt, ++count)
     {
-      bbMin.minimize( OpenMesh::vector_cast<Vec3f>(mesh_.point(*vIt)));
-      bbMax.maximize( OpenMesh::vector_cast<Vec3f>(mesh_.point(*vIt)));
+        bbMin.minimize( OpenMesh::vector_cast<Vec3f>(mesh_.point(*vIt)));
+        bbMax.maximize( OpenMesh::vector_cast<Vec3f>(mesh_.point(*vIt)));
     }
 
-    // set bounding box at the center of the scene
-    // glPushMatrix();
-    // glTranslatef(-CenterOfMassVec.x, -CenterOfMassVec.y, -CenterOfMassVec.z);
+    /// set bounding box at the center of the scene
     setSceneBoundingBox(OMVec3f_to_QGLVec(bbMin), OMVec3f_to_QGLVec(bbMax));
+    glFogf(GL_FOG_START,1.5*sceneRadius());
+    glFogf(GL_FOG_END,  3.0*sceneRadius());
     camera()->showEntireScene();
-    // glPopMatrix();
 
-    // for normal display
+    /// for normal display
     normal_scale_ = (bbMax-bbMin).min()*0.05f;
 
-    // info
+    /// info
     std::clog << mesh_.n_vertices() << " vertices, "
           << mesh_.n_edges()    << " edge, "
           << mesh_.n_faces()    << " faces\n";
 
-    // base point for displaying face normals
+    /// base point for displaying face normals
     {
       OpenMesh::Utils::Timer t;
       t.start();
@@ -133,7 +125,7 @@ TCViewerT<M>::open_mesh(const char* _filename, IO::Options _opt)
                 << t.as_string() << "]" << std::endl;
     }
 
-    // loading done
+    /// loading done
     return true;
   }
   return false;
@@ -165,7 +157,7 @@ bool TCViewerT<M>::set_texture( QImage& _texsrc )
     return false;
    
   {
-    // adjust texture size: 2^k * 2^l
+    /// adjust texture size: 2^k * 2^l
     int tex_w, w( _texsrc.width()  );
     int tex_h, h( _texsrc.height() );
 
@@ -193,10 +185,7 @@ bool TCViewerT<M>::set_texture( QImage& _texsrc )
   }
   glGenTextures(1, &tex_id_);
   glBindTexture(GL_TEXTURE_2D, tex_id_);
-    
-  // glTexGenfv( GL_S, GL_SPHERE_MAP, 0 );
-  // glTexGenfv( GL_T, GL_SPHERE_MAP, 0 );
-    
+
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
@@ -230,6 +219,8 @@ TCViewerT<M>::setDefaultMaterial()
     glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE,   mat_d);
     glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR,  mat_s);
     glMaterialfv(GL_FRONT_AND_BACK, GL_SHININESS, shine);
+
+    std::cout << "set material" << std::endl;
 }
 
 
@@ -265,13 +256,107 @@ TCViewerT<M>::setDefaultLight()
 template <typename M>
 void TCViewerT<M>::init()
 {
-    // setDefaultMaterial();
-    // setDefaultLight();
+    /////////////////////////////////////////////////////
+    //       Keyboard shortcut customization           //
+    //      Changes standard action key bindings       //
+    /////////////////////////////////////////////////////
 
-    // help();
+    /// Define 'Control+Q' as the new exit shortcut (default was 'Escape')
+    setShortcut(EXIT_VIEWER, Qt::CTRL+Qt::Key_Q);
+
+    /// add new keyboard event description
+    setKeyDescription(Qt::SHIFT+Qt::Key_C, "Toggles GL_CULL_FACE");
+    setKeyDescription(Qt::CTRL+Qt::Key_F, "Toggles GL_FOG");
+
+    /// add new mouse binding event description
+    setMouseBindingDescription(Qt::ControlModifier, Qt::MiddleButton, "Choose Render Mode", true);
+
+    /// Fog
+    GLfloat fogColor[4] = { 0.3, 0.3, 0.4, 1.0 };
+    glFogi(GL_FOG_MODE,    GL_LINEAR);
+    glFogfv(GL_FOG_COLOR,  fogColor);
+    glFogf(GL_FOG_DENSITY, 0.35);
+    glHint(GL_FOG_HINT,    GL_DONT_CARE);
+    glFogf(GL_FOG_START,    5.0f);
+    glFogf(GL_FOG_END,     25.0f);
+
+    /// material and light
+    setDefaultMaterial();
+    setDefaultLight();
+
     restoreStateFromFile();
 }
 
+template <typename M>
+void TCViewerT<M>::keyPressEvent(QKeyEvent *e)
+{
+    /// Get event modifiers key
+    const Qt::KeyboardModifiers modifiers = e->modifiers();
+
+    /// A simple switch on e->key() is not sufficient if we want to take state key into account.
+    /// With a switch, it would have been impossible to separate 'F' from 'CTRL+F'.
+    /// That's why we use imbricated if...else and a "handled" boolean.
+    bool handled = false;
+    if ((e->key() == Qt::Key_I) && (modifiers == Qt::NoButton))
+    {
+        float cp[4];
+        glGetLightfv(GL_LIGHT0,GL_POSITION,cp);
+        std::cout << "GL_LIGHT0 Position: " << cp[0] << "," << cp[1] << "," << cp[2] << "," << cp[3] << std::endl;
+        glGetLightfv(GL_LIGHT0,GL_DIFFUSE,cp);
+        std::cout << "GL_LIGHT0 Diffuse: " << cp[0] << "," << cp[1] << "," << cp[2] << "," << cp[3] << std::endl;
+        glGetLightfv(GL_LIGHT0,GL_SPECULAR,cp);
+        std::cout << "GL_LIGHT0 Specular: " << cp[0] << "," << cp[1] << "," << cp[2] << "," << cp[3] << std::endl;
+
+        glGetLightfv(GL_LIGHT1,GL_POSITION,cp);
+        std::cout << "GL_LIGHT1 Position: " << cp[0] << "," << cp[1] << "," << cp[2] << "," << cp[3] << std::endl;
+        glGetLightfv(GL_LIGHT1,GL_DIFFUSE,cp);
+        std::cout << "GL_LIGHT1 Diffuse: " << cp[0] << "," << cp[1] << "," << cp[2] << "," << cp[3] << std::endl;
+        glGetLightfv(GL_LIGHT1,GL_SPECULAR,cp);
+        std::cout << "GL_LIGHT1 Specular: " << cp[0] << "," << cp[1] << "," << cp[2] << "," << cp[3] << std::endl;
+
+        glGetLightfv(GL_LIGHT2,GL_POSITION,cp);
+        std::cout << "GL_LIGHT2 Position: " << cp[0] << "," << cp[1] << "," << cp[2] << "," << cp[3] << std::endl;
+        glGetLightfv(GL_LIGHT2,GL_DIFFUSE,cp);
+        std::cout << "GL_LIGHT2 Diffuse: " << cp[0] << "," << cp[1] << "," << cp[2] << "," << cp[3] << std::endl;
+        glGetLightfv(GL_LIGHT2,GL_SPECULAR,cp);
+        std::cout << "GL_LIGHT2 Specular: " << cp[0] << "," << cp[1] << "," << cp[2] << "," << cp[3] << std::endl;
+
+        std::cout << "Scene Radius: " << sceneRadius() << std::endl;
+        std::cout << "Scene Center: " << sceneCenter() << std::endl;
+    }
+
+    else if ((e->key() == Qt::Key_C) && (modifiers == Qt::ShiftModifier)) {
+        if ( glIsEnabled( GL_CULL_FACE ) )
+        {
+            glDisable( GL_CULL_FACE );
+            std::cout << "Back face culling: disabled" << std::endl;
+        }
+        else
+        {
+            glEnable( GL_CULL_FACE );
+            std::cout << "Back face culling: enabled" << std::endl;
+        }
+        updateGL();
+    }
+    else if ((e->key() == Qt::Key_F) && (modifiers == Qt::ControlModifier)) {
+        if ( glIsEnabled( GL_FOG ) )
+        {
+            glDisable( GL_FOG );
+            std::cout << "Fog: disabled" << std::endl;
+        }
+        else
+        {
+            glEnable( GL_FOG );
+            std::cout << "Fog: enabled" << std::endl;
+        }
+        updateGL();
+    }
+    else {
+    }
+
+    if (!handled)
+        QGLViewer::keyPressEvent(e);
+}
 
 template <typename M>
 void TCViewerT<M>::draw()
@@ -279,7 +364,6 @@ void TCViewerT<M>::draw()
     if ( ! mesh_.n_vertices() )
         return;
 
-    // rendering
     typename Mesh::ConstFaceIter fIt(mesh_.faces_begin()), fEnd(mesh_.faces_end());
     typename Mesh::ConstFaceVertexIter fvIt;
     
