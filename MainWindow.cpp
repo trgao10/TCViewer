@@ -1,0 +1,91 @@
+#include <QtGui>
+#include <iostream>
+
+#include "MainWindow.h"
+#include "TCViewer.h"
+
+MainWindow::MainWindow()
+{
+}
+
+void MainWindow::createActions(TCViewer* viewer)
+{
+    openAct= new QAction(tr("&Open Mesh..."), this);
+    openAct->setShortcut(tr("Ctrl+O"));
+    openAct->setStatusTip(tr("Open a mesh file"));
+    connect(openAct, SIGNAL(triggered()), viewer, SLOT(query_open_mesh_file()));
+
+    texAct = new QAction(tr("Open Texture..."), this);
+    texAct->setShortcut(tr("Ctrl+T"));
+    texAct->setStatusTip(tr("Open a texture file"));
+    connect(texAct, SIGNAL(triggered()), viewer, SLOT(query_open_texture_file()));
+
+    aboutAct = new QAction(tr("&About"), this);
+    aboutAct->setStatusTip(tr("Show the application's About box"));
+    connect(aboutAct, SIGNAL(triggered()), viewer, SLOT(about()));
+
+    aboutQtAct = new QAction(tr("About &Qt"), this);
+    aboutQtAct->setStatusTip(tr("Show the Qt library's About box"));
+    connect(aboutQtAct, SIGNAL(triggered()), qApp, SLOT(aboutQt()));
+    connect(aboutQtAct, SIGNAL(triggered()), viewer, SLOT(aboutQt()));
+
+    SmoothAct = new QAction(tr("&Smooth"), this);
+    SmoothAct->setCheckable(true);
+    SmoothAct->setShortcut(tr("Shift+S"));
+    SmoothAct->setStatusTip(tr("Smooth Shading"));
+    connect(SmoothAct, SIGNAL(triggered()), viewer, SLOT(Smooth()));
+
+    FlatAct = new QAction(tr("&Flat"), this);
+    FlatAct->setCheckable(true);
+    FlatAct->setShortcut(tr("Shift+F"));
+    FlatAct->setStatusTip(tr("Flat Shading"));
+    connect(FlatAct, SIGNAL(triggered()), viewer, SLOT(Flat()));
+
+    WireframeAct = new QAction(tr("&Wireframe"), this);
+    WireframeAct->setCheckable(true);
+    WireframeAct->setShortcut(tr("Shift+W"));
+    WireframeAct->setStatusTip(tr("Display Wireframe"));
+    connect(WireframeAct, SIGNAL(triggered()), viewer, SLOT(Wireframe()));
+
+    PointsAct = new QAction(tr("&Points"), this);
+    PointsAct->setCheckable(true);
+    PointsAct->setShortcut(tr("Shift+P"));
+    PointsAct->setStatusTip(tr("Display Points"));
+    connect(PointsAct, SIGNAL(triggered()), viewer, SLOT(Points()));
+
+    HiddenLineAct = new QAction(tr("&Hidden-Line"), this);
+    HiddenLineAct->setCheckable(true);
+    HiddenLineAct->setShortcut(tr("Shift+H"));
+    HiddenLineAct->setStatusTip(tr("Hidden-Line"));
+    connect(HiddenLineAct, SIGNAL(triggered()), viewer, SLOT(HiddenLine()));
+
+    renderModeGroup = new QActionGroup(this);
+    renderModeGroup->addAction(SmoothAct);
+    renderModeGroup->addAction(FlatAct);
+    renderModeGroup->addAction(WireframeAct);
+    renderModeGroup->addAction(PointsAct);
+    renderModeGroup->addAction(HiddenLineAct);
+    SmoothAct->setChecked(true);
+}
+
+void MainWindow::createMenus()
+{
+    fileMenu = menuBar()->addMenu(tr("&File"));
+    fileMenu->addAction(openAct);
+//    connect(openAct, SIGNAL(triggered()), this->centralWidget(), SLOT(query_open_mesh_file()));
+    fileMenu->addAction(texAct);
+//    connect(texAct, SIGNAL(triggered()), this->centralWidget(), SLOT(query_open_texture_file()));
+
+    renderMenu = menuBar()->addMenu(tr("&Render"));
+    renderMenu->addAction(SmoothAct);
+    renderMenu->addAction(FlatAct);
+    renderMenu->addAction(WireframeAct);
+    renderMenu->addAction(PointsAct);
+    renderMenu->addAction(HiddenLineAct);
+//    renderMenu->addSeparator();
+
+    helpMenu = menuBar()->addMenu(tr("&Help"));
+    helpMenu->addAction(aboutAct);
+    helpMenu->addAction(aboutQtAct);
+}
+

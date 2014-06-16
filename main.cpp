@@ -7,10 +7,10 @@
 #include <QMenuBar>
 #include <QFileDialog>
 
-#include "mainwindow.h"
+#include "MainWindow.h"
 #include "TCViewer.h"
 
-void create_menus(MainWindow &w);
+//void create_menus(MainWindow &w);
 //void usage_and_exit(int xcode);
 
 //== MAIN FUNCTION ============================================================
@@ -41,9 +41,8 @@ int main(int argc, char** argv)
     viewer.setOptions(opt);
     mainWin.setCentralWidget(&viewer);
     viewer.setWindowTitle("TCViewer");
-    
-    create_menus(mainWin);
-        
+    mainWin.createActions(&viewer);
+    mainWin.createMenus();
     mainWin.show();
     
     /// load scene if specified on the command line
@@ -52,13 +51,11 @@ int main(int argc, char** argv)
         viewer.open_mesh_gui(argv[optind]);
     }
 
-    return application.exec();
-}
+    if ( ++optind < argc )
+    {
+        viewer.open_texture_gui(argv[optind]);
+    }
 
-void create_menus(MainWindow &w)
-{
-    /// deal with fileMenu
-    QObject::connect(w.openAct, SIGNAL(triggered()), w.centralWidget(), SLOT(query_open_mesh_file()));
-    QObject::connect(w.texAct, SIGNAL(triggered()), w.centralWidget(), SLOT(query_open_texture_file()));
+    return application.exec();
 }
 

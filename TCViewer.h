@@ -9,6 +9,7 @@
 #include <OpenMesh/Core/Mesh/TriMesh_ArrayKernelT.hh>
 
 #include "TCViewerT.h"
+#include "MainWindow.h"
 
 //== CLASS DEFINITION =========================================================
 using namespace OpenMesh;  
@@ -44,4 +45,12 @@ public slots:
 private:
     OpenMesh::IO::Options _options;
 
+private slots:
+    void Smooth();
+    void Flat();
+    void Wireframe();
+    void Points();
+    void HiddenLine();
+    void about();
+    void aboutQt();
 };

@@ -1,5 +1,45 @@
 #include "TCViewer.h"
 
+void TCViewer::Smooth()
+{
+    set_draw_mode("Smooth");
+    updateGL();
+}
+
+void TCViewer::Flat()
+{
+    set_draw_mode("Flat");
+    updateGL();
+}
+
+void TCViewer::Wireframe()
+{
+    set_draw_mode("Wireframe");
+    updateGL();
+}
+
+void TCViewer::Points()
+{
+    set_draw_mode("Points");
+    updateGL();
+}
+
+void TCViewer::HiddenLine()
+{
+    set_draw_mode("Hidden-Line");
+    updateGL();
+    std::cout << "Hidden-Line" << std::endl;
+}
+
+void TCViewer::about()
+{
+    help();
+}
+
+void TCViewer::aboutQt()
+{
+}
+
 void TCViewer::open_mesh_gui(QString fname)
 {
     OpenMesh::Utils::Timer t;
@@ -34,6 +74,7 @@ void TCViewer::query_open_mesh_file() {
                                                     tr("Open mesh file"),
                                                     tr(""),
                                                     tr("OFF Files (*.off);;"
+                                                       "PLY Files (*.ply);;"
                                                        "OBJ Files (*.obj);;"
                                                        "STL Files (*.stl);;"
                                                        "All Files (*)"));
@@ -54,5 +95,4 @@ void TCViewer::query_open_texture_file() {
     if (!fileName.isEmpty())
         open_texture_gui(fileName);
 }
-
 
