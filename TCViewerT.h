@@ -59,6 +59,7 @@ protected :
     virtual void draw();
     virtual void init();
     virtual QString helpString() const;
+    virtual void postDraw();
 
     virtual void keyPressEvent(QKeyEvent *e);
 

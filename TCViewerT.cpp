@@ -593,3 +593,10 @@ void TCViewerT<M>::set_draw_mode(const string _mode)
 {
     draw_mode_ = _mode;
 }
+
+template <typename M>
+void TCViewerT<M>::postDraw()
+{
+    QGLViewer::postDraw();
+    setDefaultMaterial();
+}
