@@ -41,10 +41,10 @@ TCViewerT<M>::open_mesh(const char* _filename, IO::Options _opt)
   std::cout << "Loading from file '" << _filename << "'\n";
   if ( IO::read_mesh(mesh_, _filename, _opt ))
   {
-    // store read option
+    /// store read option
     opt_ = _opt;
     
-    // update face and vertex normals     
+    /// update face and vertex normals
     if ( ! opt_.check( IO::Options::FaceNormal ) )
       mesh_.update_face_normals();
     else
@@ -219,8 +219,6 @@ TCViewerT<M>::setDefaultMaterial()
     glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE,   mat_d);
     glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR,  mat_s);
     glMaterialfv(GL_FRONT_AND_BACK, GL_SHININESS, shine);
-
-    std::cout << "set material" << std::endl;
 }
 
 
@@ -256,9 +254,11 @@ TCViewerT<M>::setDefaultLight()
 template <typename M>
 void TCViewerT<M>::init()
 {
+    glDisable(GL_COLOR_MATERIAL);
+
     /////////////////////////////////////////////////////
-    //       Keyboard shortcut customization           //
-    //      Changes standard action key bindings       //
+    ///       Keyboard shortcut customization         ///
+    ///      Changes standard action key bindings     ///
     /////////////////////////////////////////////////////
 
     /// Define 'Control+Q' as the new exit shortcut (default was 'Escape')
@@ -361,6 +361,8 @@ void TCViewerT<M>::keyPressEvent(QKeyEvent *e)
 template <typename M>
 void TCViewerT<M>::draw()
 {
+    glDisable(GL_COLOR_MATERIAL);
+
     if ( ! mesh_.n_vertices() )
         return;
 
@@ -407,6 +409,8 @@ void TCViewerT<M>::draw()
         {
             glDisable(GL_TEXTURE_2D);
         }
+
+        setDefaultMaterial();
     } /// "Smooth"
 
     else if (draw_mode_ == "Flat") {
@@ -427,6 +431,8 @@ void TCViewerT<M>::draw()
             glVertex3fv( &mesh_.point(*fvIt)[0] );
         }
         glEnd();
+
+        setDefaultMaterial();
     } /// "Flat"
 
     else if (draw_mode_ == "Wireframe") {
@@ -448,6 +454,8 @@ void TCViewerT<M>::draw()
         glEnd();
 
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+
+        setDefaultMaterial();
     } /// "Wireframe"
 
     else if (draw_mode_ == "Points") {
@@ -465,6 +473,8 @@ void TCViewerT<M>::draw()
         glDrawArrays( GL_POINTS, 0, static_cast<GLsizei>(mesh_.n_vertices()) );
         glDisableClientState(GL_VERTEX_ARRAY);
         glDisableClientState(GL_COLOR_ARRAY);
+
+        setDefaultMaterial();
     } /// "Points"
 
     else if (draw_mode_ == "Hidden-Line") {
@@ -505,6 +515,7 @@ void TCViewerT<M>::draw()
 
         glDisable(GL_POLYGON_OFFSET_FILL);
 
+        setDefaultMaterial();
     } /// "Hidden-Line"
 
     else {
