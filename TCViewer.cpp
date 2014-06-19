@@ -102,18 +102,22 @@ bool TCViewer::open_mesh(const char* _filename, IO::Options _opt)
 
         /// compute vertex valence and convert them to "valence_color"'s
         int valence;
-//        std::vector<float>  valences;
+        std::vector<float>  valences;
         for (vIt=mesh_.vertices_begin(); vIt!=vEnd; ++vIt) {
             valence = 0;
             for (TCMesh::VertexVertexIter vvIt=mesh_.vv_iter(*vIt); vvIt.is_valid(); ++vvIt) {
                 valence++;
             }
             mesh_.data(*vIt).set_valence(valence);
+            valences.push_back(valence);
         }
+
+        float range_min = *std::max_element(valences.begin(),valences.end());
+        float range_max = *std::min_element(valences.begin(),valences.end());
 
         Vec3f valence_color;
         for (vIt=mesh_.vertices_begin(); vIt!=vEnd; ++vIt) {
-            valence_color = interp_color(mesh_.data(*vIt).get_valence());
+            valence_color = interp_color(mesh_.data(*vIt).get_valence(), range_min, range_max);
             mesh_.data(*vIt).set_valence_color(valence_color);
         }
 
@@ -656,4 +660,26 @@ OpenMesh::Vec3f TCViewer::interp_color(float _val)
     OpenMesh::Vec3f interped_val(red, green, blue);
 
     return interped_val;
+}
+
+OpenMesh::Vec3f TCViewer::interp_color(float _val, float range_min, float range_max)
+{
+    OpenMesh::Vec3f red(1,0,0), green(0,1,0), blue(0,0,1);
+
+    OpenMesh::Vec3f interped_val = green;
+
+    if (range_min==range_max) {
+        return interped_val*255;
+    }
+    else {
+        _val = (_val-range_min)/(range_max-range_min);
+        if (_val <= 0.5) {
+            interped_val  = (1.0f-2.0f*_val)*red+2.0f*_val*green;
+        }
+        else {
+            interped_val = (2.0f-2.0f*_val)*green+(2.0f*_val-1.0f)*blue;
+        }
+    }
+
+    return interped_val*255;
 }

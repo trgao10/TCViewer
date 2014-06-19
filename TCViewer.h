@@ -63,6 +63,7 @@ public:
 
     /// interpolate [0,1] into RGB valus
     Vec3f interp_color(float _val);
+    Vec3f interp_color(float _val, float range_min, float range_max);
 
     qglviewer::Vec OMVec3f_to_QGLVec(OpenMesh::Vec3f OMVec3f)
     { return qglviewer::Vec(OMVec3f.values_[0], OMVec3f.values_[1], OMVec3f.values_[2]); }
