@@ -10,9 +10,6 @@
 #include "MainWindow.h"
 #include "TCViewer.h"
 
-//void create_menus(MainWindow &w);
-//void usage_and_exit(int xcode);
-
 //== MAIN FUNCTION ============================================================
 int main(int argc, char** argv)
 {

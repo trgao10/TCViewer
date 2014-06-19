@@ -59,12 +59,19 @@ void MainWindow::createActions(TCViewer* viewer)
     HiddenLineAct->setStatusTip(tr("Hidden-Line"));
     connect(HiddenLineAct, SIGNAL(triggered()), viewer, SLOT(HiddenLine()));
 
+    ValenceAct = new QAction(tr("&Valence"), this);
+    ValenceAct->setCheckable(true);
+    ValenceAct->setShortcut(tr("Shift+V"));
+    ValenceAct->setStatusTip(tr("View Vertex Valence"));
+    connect(ValenceAct, SIGNAL(triggered()), viewer, SLOT(Valence()));
+
     renderModeGroup = new QActionGroup(this);
     renderModeGroup->addAction(SmoothAct);
     renderModeGroup->addAction(FlatAct);
     renderModeGroup->addAction(WireframeAct);
     renderModeGroup->addAction(PointsAct);
     renderModeGroup->addAction(HiddenLineAct);
+    renderModeGroup->addAction(ValenceAct);
     SmoothAct->setChecked(true);
 }
 
@@ -80,6 +87,7 @@ void MainWindow::createMenus()
     renderMenu->addAction(WireframeAct);
     renderMenu->addAction(PointsAct);
     renderMenu->addAction(HiddenLineAct);
+    renderMenu->addAction(ValenceAct);
 
     helpMenu = menuBar()->addMenu(tr("&Help"));
     helpMenu->addAction(aboutAct);
@@ -96,6 +104,7 @@ void MainWindow::mousePressEvent(QMouseEvent *event)
         menu.addAction(WireframeAct);
         menu.addAction(PointsAct);
         menu.addAction(HiddenLineAct);
+        menu.addAction(ValenceAct);
         menu.exec(event->globalPos());
     }
     else {

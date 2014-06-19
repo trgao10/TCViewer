@@ -19,7 +19,7 @@ template <typename T>
 class TCViewerT : public QGLViewer
 {
 public:
-    typedef T                             Mesh;
+    typedef T Mesh;
 
 public:
     /// default constructor
@@ -36,21 +36,11 @@ public:
     ///destructor
     ~TCViewerT() {}
 
-    /// open mesh
-    virtual bool open_mesh(const char* _filename, OpenMesh::IO::Options _opt);
-
-    /// load texture
-    virtual bool open_texture( const char *_filename );
-    bool set_texture( QImage& _texsrc );
-
     /// set draw_mode_
-    void set_draw_mode(const std::string _mode);
+    virtual void set_draw_mode(const std::string _mode);
 
     Mesh& mesh() { return mesh_; }
     const Mesh& mesh() const { return mesh_; }
-
-    qglviewer::Vec OMVec3f_to_QGLVec(OpenMesh::Vec3f OMVec3f)
-    { return qglviewer::Vec(OMVec3f.values_[0], OMVec3f.values_[1], OMVec3f.values_[2]); }
 
 protected :
     void setDefaultMaterial();

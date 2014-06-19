@@ -32,6 +32,7 @@ public:
     QAction *WireframeAct;
     QAction *PointsAct;
     QAction *HiddenLineAct;
+    QAction *ValenceAct;
     QAction *aboutAct;
     QAction *aboutQtAct;
     QLabel *infoLabel;
