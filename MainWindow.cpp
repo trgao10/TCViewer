@@ -65,6 +65,18 @@ void MainWindow::createActions(TCViewer* viewer)
     ValenceAct->setStatusTip(tr("View Vertex Valence"));
     connect(ValenceAct, SIGNAL(triggered()), viewer, SLOT(Valence()));
 
+    GaussianCurvatureAct = new QAction(tr("&Gaussian Curvature"), this);
+    GaussianCurvatureAct->setCheckable(true);
+    GaussianCurvatureAct->setShortcut(tr("Shift+G"));
+    GaussianCurvatureAct->setStatusTip(tr("View Gaussian Curvature"));
+    connect(GaussianCurvatureAct, SIGNAL(triggered()), viewer, SLOT(GaussianCurvature()));
+
+    MeanCurvatureAct = new QAction(tr("&Mean Curvature"), this);
+    MeanCurvatureAct->setCheckable(true);
+    MeanCurvatureAct->setShortcut(tr("Shift+M"));
+    MeanCurvatureAct->setStatusTip(tr("View Mean Curvature"));
+    connect(MeanCurvatureAct, SIGNAL(triggered()), viewer, SLOT(MeanCurvature()));
+
     renderModeGroup = new QActionGroup(this);
     renderModeGroup->addAction(SmoothAct);
     renderModeGroup->addAction(FlatAct);
@@ -72,6 +84,8 @@ void MainWindow::createActions(TCViewer* viewer)
     renderModeGroup->addAction(PointsAct);
     renderModeGroup->addAction(HiddenLineAct);
     renderModeGroup->addAction(ValenceAct);
+    renderModeGroup->addAction(GaussianCurvatureAct);
+    renderModeGroup->addAction(MeanCurvatureAct);
     SmoothAct->setChecked(true);
 }
 
@@ -88,6 +102,8 @@ void MainWindow::createMenus()
     renderMenu->addAction(PointsAct);
     renderMenu->addAction(HiddenLineAct);
     renderMenu->addAction(ValenceAct);
+    renderMenu->addAction(GaussianCurvatureAct);
+    renderMenu->addAction(MeanCurvatureAct);
 
     helpMenu = menuBar()->addMenu(tr("&Help"));
     helpMenu->addAction(aboutAct);
@@ -105,6 +121,8 @@ void MainWindow::mousePressEvent(QMouseEvent *event)
         menu.addAction(PointsAct);
         menu.addAction(HiddenLineAct);
         menu.addAction(ValenceAct);
+        menu.addAction(GaussianCurvatureAct);
+        menu.addAction(MeanCurvatureAct);
         menu.exec(event->globalPos());
     }
     else {

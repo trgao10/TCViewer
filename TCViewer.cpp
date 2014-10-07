@@ -101,6 +101,7 @@ bool TCViewer::open_mesh(const char* _filename, IO::Options _opt)
                   << t.as_string() << "]" << std::endl;
 
         /// compute vertex valence and convert them to "valence_color"'s
+        std::cout << "Computing vertex valences..." << std::endl;
         int valence;
         std::vector<float>  valences;
         for (vIt=mesh_.vertices_begin(); vIt!=vEnd; ++vIt) {
@@ -120,6 +121,10 @@ bool TCViewer::open_mesh(const char* _filename, IO::Options _opt)
             valence_color = interp_color(mesh_.data(*vIt).get_valence(), range_min, range_max);
             mesh_.data(*vIt).set_valence_color(valence_color);
         }
+        std::cout << "Valence computation done." << std::endl;
+
+        /// compute Gaussian and mean curvatures and convert them to corresponding colors
+
 
         /// loading done
         return true;
@@ -455,6 +460,82 @@ void TCViewer::draw()
         glDisableClientState(GL_NORMAL_ARRAY);
         glDisableClientState(GL_COLOR_ARRAY);
     } /// "Valence"
+    else if (draw_mode_ == "GaussianCurvature") {
+        mesh_.request_vertex_colors();
+        TCMesh::VertexIter vIt, vEnd(mesh_.vertices_end());
+        for (vIt=mesh_.vertices_begin(); vIt!=vEnd; ++vIt) {
+            mesh_.set_color(*vIt, TCMesh::Color(mesh_.data(*vIt).get_valence_color()));
+        }
+
+        glDisable(GL_LIGHTING);
+        glShadeModel(GL_SMOOTH);
+
+        glEnableClientState(GL_VERTEX_ARRAY);
+        glVertexPointer(3, GL_FLOAT, 0, mesh_.points());
+
+        glEnableClientState(GL_NORMAL_ARRAY);
+        glNormalPointer(GL_FLOAT, 0, mesh_.vertex_normals());
+
+        if ( mesh_.has_vertex_colors() )
+        {
+            glEnableClientState( GL_COLOR_ARRAY );
+            glColorPointer(3, GL_UNSIGNED_BYTE, 0, mesh_.vertex_colors());
+        }
+
+        glBegin(GL_TRIANGLES);
+        for (; fIt!=fEnd; ++fIt)
+        {
+            fvIt = mesh_.cfv_iter(*fIt);
+            glArrayElement(fvIt->idx());
+            ++fvIt;
+            glArrayElement(fvIt->idx());
+            ++fvIt;
+            glArrayElement(fvIt->idx());
+        }
+        glEnd();
+
+        glDisableClientState(GL_VERTEX_ARRAY);
+        glDisableClientState(GL_NORMAL_ARRAY);
+        glDisableClientState(GL_COLOR_ARRAY);
+    } /// "GaussianCurvature"
+    else if (draw_mode_ == "MeanCurvature") {
+        mesh_.request_vertex_colors();
+        TCMesh::VertexIter vIt, vEnd(mesh_.vertices_end());
+        for (vIt=mesh_.vertices_begin(); vIt!=vEnd; ++vIt) {
+            mesh_.set_color(*vIt, TCMesh::Color(mesh_.data(*vIt).get_valence_color()));
+        }
+
+        glDisable(GL_LIGHTING);
+        glShadeModel(GL_SMOOTH);
+
+        glEnableClientState(GL_VERTEX_ARRAY);
+        glVertexPointer(3, GL_FLOAT, 0, mesh_.points());
+
+        glEnableClientState(GL_NORMAL_ARRAY);
+        glNormalPointer(GL_FLOAT, 0, mesh_.vertex_normals());
+
+        if ( mesh_.has_vertex_colors() )
+        {
+            glEnableClientState( GL_COLOR_ARRAY );
+            glColorPointer(3, GL_UNSIGNED_BYTE, 0, mesh_.vertex_colors());
+        }
+
+        glBegin(GL_TRIANGLES);
+        for (; fIt!=fEnd; ++fIt)
+        {
+            fvIt = mesh_.cfv_iter(*fIt);
+            glArrayElement(fvIt->idx());
+            ++fvIt;
+            glArrayElement(fvIt->idx());
+            ++fvIt;
+            glArrayElement(fvIt->idx());
+        }
+        glEnd();
+
+        glDisableClientState(GL_VERTEX_ARRAY);
+        glDisableClientState(GL_NORMAL_ARRAY);
+        glDisableClientState(GL_COLOR_ARRAY);
+    } /// "MeanCurvature"
     else {
         glEnable(GL_LIGHTING);
         glShadeModel(GL_SMOOTH);
@@ -631,6 +712,20 @@ void TCViewer::HiddenLine()
 void TCViewer::Valence()
 {
     set_draw_mode("Valence");
+    updateGL();
+}
+
+void TCViewer::GaussianCurvature()
+{
+    std::cout << "Gaussian Curvature!" << std::endl;
+    set_draw_mode("GaussianCurvature");
+    updateGL();
+}
+
+void TCViewer::MeanCurvature()
+{
+    std::cout << "Mean Curvature!" << std::endl;
+    set_draw_mode("MeanCurvature");
     updateGL();
 }
 

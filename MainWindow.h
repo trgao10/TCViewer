@@ -2,6 +2,8 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QMenu>
+#include <QMenuBar>
 
 class QAction;
 class QActionGroup;
@@ -33,6 +35,8 @@ public:
     QAction *PointsAct;
     QAction *HiddenLineAct;
     QAction *ValenceAct;
+    QAction *GaussianCurvatureAct;
+    QAction *MeanCurvatureAct;
     QAction *aboutAct;
     QAction *aboutQtAct;
     QLabel *infoLabel;

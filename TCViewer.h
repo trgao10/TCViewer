@@ -86,6 +86,8 @@ private slots:
     void Points();
     void HiddenLine();
     void Valence();
+    void GaussianCurvature();
+    void MeanCurvature();
 
     void about();
     void aboutQt();
